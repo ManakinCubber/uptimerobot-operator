@@ -40,9 +40,9 @@ class PspV1Beta1:
             type='array',
             items=k8s_client.V1JSONSchemaProps(
                 type='string',
-                description='the name of one monitor'
+                description='the name of one UptimeRobotMonitor object in the same namespace'
             ),
-            description='the list of monitor IDs to be displayed in status page (the values are seperated with "-" or 0 for all monitors)'
+            description='the list of UptimeRobotMonitor to be linked'
         ),
         'friendlyName': k8s_client.V1JSONSchemaProps(
             type='string',
@@ -95,6 +95,14 @@ class PspV1Beta1:
                             'spec': k8s_client.V1JSONSchemaProps(
                                 type='object',
                                 required=required_props,
+                                any_of=[
+                                    k8s_client.V1JSONSchemaProps(
+                                        required=["monitors"]
+                                    ),
+                                    k8s_client.V1JSONSchemaProps(
+                                        required=["monitorNames"]
+                                    ),
+                                ],
                                 properties=spec_properties
                             ),
                             'status': k8s_client.V1JSONSchemaProps(

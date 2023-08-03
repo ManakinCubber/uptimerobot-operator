@@ -104,7 +104,7 @@ def create_psp(name, namespace, logger, **kwargs):
     print(kwargs)
     api_instance = k8s_client.CustomObjectsApi()
     monitorIds = []
-    for monitorName in kwargs["monitor_names"]:
+    for monitorName in kwargs.get("monitor_names", []):
         r = api_instance.get_namespaced_custom_object(GROUP, MonitorV1Beta1.version, namespace, MonitorV1Beta1.plural, monitorName)
         monitorIds.append(str(get_identifier(r['status'])))
         print(f"{monitorName}: {get_identifier(r['status'])}")
