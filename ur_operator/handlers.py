@@ -101,7 +101,6 @@ def delete_monitor(logger, identifier):
             f'failed to delete monitor with ID {identifier}: {resp["error"]}')
 
 def create_psp(name, namespace, logger, **kwargs):
-    print(kwargs)
     api_instance = k8s_client.CustomObjectsApi()
     monitorIds = []
     for monitorName in kwargs.get("monitor_names", []):
