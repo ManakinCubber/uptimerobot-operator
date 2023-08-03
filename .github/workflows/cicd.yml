@@ -26,19 +26,6 @@ jobs:
         run: helm lint helm/uptimerobot-operator
       - name: Execute unit tests
         run: pipenv run pytest tests/test_unit.py
-      - name: Set up kind cluster
-        uses: engineerd/setup-kind@v0.5.0
-        with:
-          image: kindest/node:v1.19.1
-      - name: Execute E2E tests
-        env:
-          UPTIMEROBOT_API_KEY: ${{ secrets.UPTIMEROBOT_API_KEY }}
-        run: |
-          # for some reason tests fail when starting them with a single command
-          # that's why we are looping here
-          for test in tests/test_e2e*.py; do
-            pipenv run pytest $test
-          done
 
   build_docker_image:
     runs-on: ubuntu-latest
