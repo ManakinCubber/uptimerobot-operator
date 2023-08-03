@@ -51,20 +51,20 @@ jobs:
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.CR_PAT }}
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
       - name: Build Docker image
-        run: docker build . --tag ghcr.io/brennerm/uptimerobot-operator:${{ env.BRANCH_NAME }}
+        run: docker build . --tag ghcr.io/ManakinCubber/uptimerobot-operator:${{ env.BRANCH_NAME }}
       - name: Push Docker image for branch
         if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
-        run: docker push ghcr.io/brennerm/uptimerobot-operator:${{ env.BRANCH_NAME }}
+        run: docker push ghcr.io/ManakinCubber/uptimerobot-operator:${{ env.BRANCH_NAME }}
       - name: Push Docker image for tag
         if: ${{ startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push' }}
         run: |
-          docker tag ghcr.io/brennerm/uptimerobot-operator:${{ env.BRANCH_NAME }} ghcr.io/brennerm/uptimerobot-operator:latest
-          docker tag ghcr.io/brennerm/uptimerobot-operator:${{ env.BRANCH_NAME }} ghcr.io/brennerm/uptimerobot-operator:${GITHUB_REF##*/}
-          docker push ghcr.io/brennerm/uptimerobot-operator:latest
-          docker push ghcr.io/brennerm/uptimerobot-operator:${GITHUB_REF##*/}
+          docker tag ghcr.io/ManakinCubber/uptimerobot-operator:${{ env.BRANCH_NAME }} ghcr.io/ManakinCubber/uptimerobot-operator:latest
+          docker tag ghcr.io/ManakinCubber/uptimerobot-operator:${{ env.BRANCH_NAME }} ghcr.io/ManakinCubber/uptimerobot-operator:${GITHUB_REF##*/}
+          docker push ghcr.io/ManakinCubber/uptimerobot-operator:latest
+          docker push ghcr.io/ManakinCubber/uptimerobot-operator:${GITHUB_REF##*/}
 
   build_helm_chart:
     runs-on: ubuntu-latest
@@ -94,7 +94,7 @@ jobs:
         run: helm package ../../uptimerobot-operator/helm/uptimerobot-operator
       - name: Update repo index
         working-directory: helm-chart-index/helm
-        run: helm repo index . --merge index.yaml --url https://brennerm.github.io/uptimerobot-operator/helm
+        run: helm repo index . --merge index.yaml --url https://ManakinCubber.github.io/uptimerobot-operator/helm
       - name: Release Helm chart
         if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
         working-directory: helm-chart-index
