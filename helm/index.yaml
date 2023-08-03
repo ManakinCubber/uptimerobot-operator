@@ -2,8 +2,18 @@ apiVersion: v1
 entries:
   uptimerobot-operator:
   - apiVersion: v2
+    appVersion: 0.4.2
+    created: "2023-08-03T13:03:37.524311651Z"
+    description: A Kubernetes operator that creates uptime monitors for your ingresses
+    digest: 97972d382d7e5820d08b43f9c166daf15571b43016e01a6c20569ffc95ddadf4
+    name: uptimerobot-operator
+    type: application
+    urls:
+    - https://manakincubber.github.io/uptimerobot-operator/helm/uptimerobot-operator-0.4.2.tgz
+    version: 0.4.2
+  - apiVersion: v2
     appVersion: v0.4.1
-    created: "2023-08-03T12:17:44.946137977Z"
+    created: "2023-08-03T13:03:37.523946848Z"
     description: A Kubernetes operator that creates uptime monitors for your ingresses
     digest: f38f260b1e911c946aec6f782ff7ee2bded480306bb2770937a9412078faa0e2
     name: uptimerobot-operator
@@ -13,7 +23,7 @@ entries:
     version: 0.4.1
   - apiVersion: v2
     appVersion: v0.4.0
-    created: "2023-08-03T12:17:44.944498114Z"
+    created: "2023-08-03T13:03:37.523580244Z"
     description: A Kubernetes operator that creates uptime monitors for your ingresses
     digest: 658de3e75f5154538f39bff097b95ba245e69730b5838203469309b4e7ae4a76
     name: uptimerobot-operator
@@ -23,7 +33,7 @@ entries:
     version: 0.4.0
   - apiVersion: v2
     appVersion: v0.3.0
-    created: "2023-08-03T12:17:44.943921592Z"
+    created: "2023-08-03T13:03:37.52320674Z"
     description: A Kubernetes operator that creates uptime monitors for your ingresses
     digest: 4feaa247eff377d16075d1a1b423fe8b397594e2a3c912ab3e76d58e70215d39
     name: uptimerobot-operator
@@ -33,7 +43,7 @@ entries:
     version: 0.3.0
   - apiVersion: v2
     appVersion: v0.3.0
-    created: "2023-08-03T12:17:44.942895953Z"
+    created: "2023-08-03T13:03:37.522838837Z"
     description: A Kubernetes operator that creates uptime monitors for your ingresses
     digest: 4d285cdf949c7db38eb31bc4f7da2cd6c71b5d2108897cc9fb4b04fcbb069752
     name: uptimerobot-operator
@@ -43,7 +53,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: v0.1.0
-    created: "2023-08-03T12:17:44.942453536Z"
+    created: "2023-08-03T13:03:37.522418133Z"
     description: A Kubernetes operator that creates uptime monitors for your ingresses
     digest: 12b3da1c06d751be44b72edfcebbcd816c24422a87bac8df8365a7b0473dfd36
     name: uptimerobot-operator
@@ -51,4 +61,4 @@ entries:
     urls:
     - https://manakincubber.github.io/uptimerobot-operator/helm/uptimerobot-operator-0.1.0.tgz
     version: 0.1.0
-generated: "2023-08-03T12:17:44.941766209Z"
+generated: "2023-08-03T13:03:37.521811527Z"
