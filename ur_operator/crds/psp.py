@@ -29,11 +29,19 @@ class PspV1Beta1:
     short_names = ['psp']
     version = 'v1beta1'
 
-    required_props = ['monitors']
+    required_props = []
 
     spec_properties = {
         'monitors': k8s_client.V1JSONSchemaProps(
             type='string',
+            description='the list of monitor IDs to be displayed in status page (the values are seperated with "-" or 0 for all monitors)'
+        ),
+        'monitorNames': k8s_client.V1JSONSchemaProps(
+            type='array',
+            items=k8s_client.V1JSONSchemaProps(
+                type='string',
+                description='the name of one monitor'
+            ),
             description='the list of monitor IDs to be displayed in status page (the values are seperated with "-" or 0 for all monitors)'
         ),
         'friendlyName': k8s_client.V1JSONSchemaProps(

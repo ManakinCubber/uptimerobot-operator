@@ -100,7 +100,19 @@ def delete_monitor(logger, identifier):
         raise kopf.PermanentError(
             f'failed to delete monitor with ID {identifier}: {resp["error"]}')
 
-def create_psp(logger, **kwargs):
+def create_psp(name, namespace, logger, **kwargs):
+    print(kwargs)
+    api_instance = k8s_client.CustomObjectsApi()
+    monitorIds = []
+    for monitorName in kwargs["monitor_names"]:
+        r = api_instance.get_namespaced_custom_object(GROUP, MonitorV1Beta1.version, namespace, MonitorV1Beta1.plural, monitorName)
+        monitorIds.append(str(get_identifier(r['status'])))
+        print(f"{monitorName}: {get_identifier(r['status'])}")
+
+    existingMonitor = kwargs.get("monitors", None)
+    (monitorIds.append(existingMonitor) if existingMonitor is not None else None)
+    kwargs["monitors"] = "-".join(monitorIds)
+    
     resp = uptime_robot.new_psp(
         type='1',
         **{k:str(v) for k,v in kwargs.items()}
@@ -424,16 +436,18 @@ def on_delete(status: dict, logger, **_):
     except Exception as error:
         raise kopf.PermanentError(f"deleting monitor failed: {error}") from error
 
-@kopf.on.create(GROUP, MonitorV1Beta1.version, PspV1Beta1.plural)
+@kopf.on.create(GROUP, PspV1Beta1.version, PspV1Beta1.plural)
 def on_psp_create(namespace: str, name: str, spec: dict, logger, **_):
     identifier = create_psp(
+        name,
+        namespace,
         logger,
         **PspV1Beta1.spec_to_request_dict(namespace, name, spec)
     )
 
     return {PSP_ID_KEY: identifier}
 
-@kopf.on.update(GROUP, MonitorV1Beta1.version, PspV1Beta1.plural)
+@kopf.on.update(GROUP, PspV1Beta1.version, PspV1Beta1.plural)
 def on_psp_update(namespace: str, name: str, spec: dict, status: dict, logger, **_):
     try:
         identifier = get_psp_identifier(status)
@@ -449,7 +463,7 @@ def on_psp_update(namespace: str, name: str, spec: dict, status: dict, logger, *
 
     return {PSP_ID_KEY: identifier}
 
-@kopf.on.delete(GROUP, MonitorV1Beta1.version, PspV1Beta1.plural)
+@kopf.on.delete(GROUP, PspV1Beta1.version, PspV1Beta1.plural)
 def on_psp_delete(status: dict, logger, **_):
     try:  # making sure to catch all exceptions here to prevent blocking deletion
         identifier = get_psp_identifier(status)
@@ -460,7 +474,7 @@ def on_psp_delete(status: dict, logger, **_):
     except Exception as error:
         raise kopf.PermanentError(f"deleting PSP failed: {error}") from error
 
-@kopf.on.create(GROUP, MonitorV1Beta1.version, MaintenanceWindowV1Beta1.plural)
+@kopf.on.create(GROUP, MaintenanceWindowV1Beta1.version, MaintenanceWindowV1Beta1.plural)
 def on_mw_create(name: str, spec: dict, logger, **_):
     identifier = create_mw(
         logger,
@@ -469,7 +483,7 @@ def on_mw_create(name: str, spec: dict, logger, **_):
 
     return {MW_ID_KEY: identifier}
 
-@kopf.on.update(GROUP, MonitorV1Beta1.version, MaintenanceWindowV1Beta1.plural)
+@kopf.on.update(GROUP, MaintenanceWindowV1Beta1.version, MaintenanceWindowV1Beta1.plural)
 def on_mw_update(name: str, spec: dict, status: dict, logger, diff: dict, **_):
     try:
         identifier = get_mw_identifier(status)
@@ -498,7 +512,7 @@ def on_mw_update(name: str, spec: dict, status: dict, logger, diff: dict, **_):
 
     return {MW_ID_KEY: identifier}
 
-@kopf.on.delete(GROUP, MonitorV1Beta1.version, MaintenanceWindowV1Beta1.plural)
+@kopf.on.delete(GROUP, MaintenanceWindowV1Beta1.version, MaintenanceWindowV1Beta1.plural)
 def on_mw_delete(status: dict, logger, **_):
     try:  # making sure to catch all exceptions here to prevent blocking deletion
         identifier = get_mw_identifier(status)
@@ -509,7 +523,7 @@ def on_mw_delete(status: dict, logger, **_):
     except Exception as error:
         raise kopf.PermanentError(f"deleting MW failed: {error}") from error
 
-@kopf.on.create(GROUP, MonitorV1Beta1.version, AlertContactV1Beta1.plural)
+@kopf.on.create(GROUP, AlertContactV1Beta1.version, AlertContactV1Beta1.plural)
 def on_ac_create(name: str, spec: dict, logger, **_):
     identifier = create_ac(
         logger,
@@ -518,7 +532,7 @@ def on_ac_create(name: str, spec: dict, logger, **_):
 
     return {AC_ID_KEY: identifier}
 
-@kopf.on.update(GROUP, MonitorV1Beta1.version, AlertContactV1Beta1.plural)
+@kopf.on.update(GROUP, AlertContactV1Beta1.version, AlertContactV1Beta1.plural)
 def on_ac_update(name: str, spec: dict, status: dict, logger, diff: dict, **_):
     try:
         identifier = get_ac_identifier(status)
@@ -547,7 +561,7 @@ def on_ac_update(name: str, spec: dict, status: dict, logger, diff: dict, **_):
 
     return {AC_ID_KEY: identifier}
 
-@kopf.on.delete(GROUP, MonitorV1Beta1.version, AlertContactV1Beta1.plural)
+@kopf.on.delete(GROUP, AlertContactV1Beta1.version, AlertContactV1Beta1.plural)
 def on_ac_delete(status: dict, logger, **_):
     try:  # making sure to catch all exceptions here to prevent blocking deletion
         identifier = get_ac_identifier(status)
