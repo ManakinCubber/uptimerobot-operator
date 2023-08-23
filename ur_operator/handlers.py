@@ -103,7 +103,7 @@ def delete_monitor(logger, identifier):
 def create_psp(name, namespace, logger, **kwargs):
     api_instance = k8s_client.CustomObjectsApi()
     monitorIds = []
-    for monitorName in kwargs.get("monitorNames", []):
+    for monitorName in kwargs.get("monitor_names", []):
         r = api_instance.get_namespaced_custom_object(GROUP, MonitorV1Beta1.version, namespace, MonitorV1Beta1.plural, monitorName)
         monitorIds.append(str(get_identifier(r['status'])))
         print(f"{monitorName}: {get_identifier(r['status'])}")
@@ -111,7 +111,7 @@ def create_psp(name, namespace, logger, **kwargs):
     existingMonitor = kwargs.get("monitors", None)
     (monitorIds.append(existingMonitor) if existingMonitor is not None else None)
     kwargs["monitors"] = "-".join(monitorIds)
-    
+    kwargs.pop("monitor_names", None)
     resp = uptime_robot.new_psp(
         type='1',
         **{k:str(v) for k,v in kwargs.items()}
